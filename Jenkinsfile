@@ -48,10 +48,6 @@ def deployTo(params = [:]) {
     if (environment == null) throw new IllegalArgumentException("environment must be specified")
 
     scos.withEksCredentials(environment) {
-        def terraformOutputs = scos.terraformOutput(environment)
-        def dnsZone = terraformOutputs.internal_dns_zone_name.value
-        def rootDnsZone = terraformOutputs.root_dns_zone_name.value
-
         sh("""#!/bin/bash
             set -xe
 
