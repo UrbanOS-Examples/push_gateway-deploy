@@ -26,7 +26,7 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: push-port
-              containerPort: 5555
+              containerPort: {{ .Values.service.port }}
               protocol: UDP
           env:
             - name: REDIS_HOST
@@ -34,7 +34,7 @@ spec:
             - name: KAFKA_BROKERS
               value: {{ .Values.kafka.brokers }}
             - name: LISTEN_PORT
-              value: {{ .Values.service.port }}
+              value: {{ quote .Values.service.port }}
             - name: ASSIGNED_DATASET_ID
               value: {{ .Values.assignedDatasetId }}
           resources:
