@@ -1,19 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "push_gateway.fullname" . }}
+  name: push-gateway
   labels:
-{{ include "push_gateway.labels" . | indent 4 }}
+{{ include "push-gateway.labels" . | indent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app.kubernetes.io/name: {{ include "push_gateway.name" . }}
+      app.kubernetes.io/name: push-gateway
       app.kubernetes.io/instance: {{ .Release.Name }}
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: {{ include "push_gateway.name" . }}
+        app.kubernetes.io/name: push-gateway
         app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
     {{- with .Values.imagePullSecrets }}

@@ -56,7 +56,7 @@ def deployTo(params = [:]) {
             set -xe
 
             helm init --client-only
-            helm upgrade --install push-gateway charts/ \
+            helm upgrade --install push-gateway chart/ \
                 --namespace=streaming-services \
                 --values=push-gateway-base.yaml \
                 ${extraArgs}
