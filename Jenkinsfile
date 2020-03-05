@@ -23,7 +23,7 @@ node ('infrastructure') {
         scos.doCheckoutStage()
 
         doStageIfDeployingToDev('Deploy to Dev') {
-            deployTo(environment: 'dev', extraArgs: "--recreate-pods --set image.tag=${env.DEV_IMAGE_TAG} --values=push-gateway-dev.yaml")
+            deployTo(environment: 'dev', extraArgs: "--recreate-pods --set image.tag=${env.DEV_IMAGE_TAG}")
         }
 
         doStageIfMergedToMaster('Process Dev job') {
@@ -31,12 +31,12 @@ node ('infrastructure') {
         }
 
         doStageIfMergedToMaster('Deploy to Staging') {
-            deployTo(environment: 'staging', extraArgs: "--values=push-gateway-staging.yaml")
+            deployTo(environment: 'staging')
             scos.applyAndPushGitHubTag('staging')
         }
 
         doStageIfRelease('Deploy to Production') {
-            deployTo(environment: 'prod', internal: false, extraArgs: "--values=push-gateway-prod.yaml")
+            deployTo(environment: 'prod')
             scos.applyAndPushGitHubTag('prod')
         }
     }
