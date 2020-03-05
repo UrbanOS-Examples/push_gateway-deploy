@@ -3,7 +3,7 @@ kind: Service
 metadata:
   name: push-gateway
   labels:
-    {{ include "push-gateway.labels" . | indent 4 }}
+{{ include "push-gateway.labels" . | indent 4 }}
   annotations:
     service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
     {{- if .Values.service.internal }}
