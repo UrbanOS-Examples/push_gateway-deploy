@@ -1,0 +1,12 @@
+replicaCount: 1
+
+image:
+  tag: 0.2.0
+
+resources:
+  limits:
+    memory: 512Mi
+    cpu: 1
+  requests:
+    memory: 512Mi
+    cpu: 1
