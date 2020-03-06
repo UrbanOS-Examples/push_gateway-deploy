@@ -13,6 +13,7 @@ service:
   port: 5555
   type: NodePort
 
+location: circleville
 assignedDatasetId: "a-dataset-uuid"
 
 kafka:

@@ -3,7 +3,7 @@
 Common labels
 */}}
 {{- define "push-gateway.labels" -}}
-app.kubernetes.io/name: push-gateway
+app.kubernetes.io/name: push-gateway-{{ .Values.location }}
 helm.sh/chart: push-gateway
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- if .Chart.AppVersion }}

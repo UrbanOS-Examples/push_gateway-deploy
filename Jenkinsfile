@@ -23,7 +23,7 @@ node ('infrastructure') {
         scos.doCheckoutStage()
 
         doStageIfDeployingToDev('Deploy to Dev') {
-            deployTo(environment: 'dev', extraArgs: "--recreate-pods --set image.tag=${env.DEV_IMAGE_TAG}")
+            deployTo(environment: 'dev', extraArgs: "--recreate-pods --set image.tag=${env.DEV_IMAGE_TAG}", location: 'marysville')
         }
 
         doStageIfMergedToMaster('Process Dev job') {
@@ -31,12 +31,12 @@ node ('infrastructure') {
         }
 
         doStageIfMergedToMaster('Deploy to Staging') {
-            deployTo(environment: 'staging')
+            deployTo(environment: 'staging', location: 'marysville')
             scos.applyAndPushGitHubTag('staging')
         }
 
         doStageIfRelease('Deploy to Production') {
-            deployTo(environment: 'prod')
+            deployTo(environment: 'prod', location: 'marysville')
             scos.applyAndPushGitHubTag('prod')
         }
     }
@@ -44,17 +44,20 @@ node ('infrastructure') {
 
 def deployTo(params = [:]) {
     def environment = params.get('environment')
+    def location = params.get('location')
     def extraArgs = params.get('extraArgs', '')
     if (environment == null) throw new IllegalArgumentException("environment must be specified")
+    if (location == null) throw new IllegalArgumentException("location must be specified")
 
     scos.withEksCredentials(environment) {
         sh("""#!/bin/bash
             set -xe
 
             helm init --client-only
-            helm upgrade --install push-gateway chart/ \
+            helm upgrade --install push-gateway-${location} chart/ \
                 --namespace=streaming-services \
                 --values=push-gateway-base.yaml \
+                --values=${location}-deployment.yaml \
                 ${extraArgs}
         """.trim())
     }

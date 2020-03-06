@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: push-gateway
+  name: push-gateway-{{ .Values.location }}
   labels:
 {{ include "push-gateway.labels" . | indent 4 }}
 spec:
@@ -11,5 +11,5 @@ spec:
       protocol: UDP
       name: push-port
   selector:
-    app.kubernetes.io/name: push-gateway
+    app.kubernetes.io/name: push-gateway-{{ .Values.location }}
     app.kubernetes.io/instance: {{ .Release.Name }}
