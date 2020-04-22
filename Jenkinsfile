@@ -9,7 +9,8 @@ properties([
     pipelineTriggers([scos.dailyBuildTrigger()]),
     parameters([
         booleanParam(defaultValue: false, description: 'Deploy to development environment?', name: 'DEV_DEPLOYMENT'),
-        string(defaultValue: 'development', description: 'Image tag to deploy to dev environment', name: 'DEV_IMAGE_TAG')
+        string(defaultValue: 'development', description: 'Image tag to deploy to dev environment', name: 'DEV_IMAGE_TAG'),
+        choice(name: "LOCATION", choices: ['marysville', 'columbus'], description: 'Location to deploy.')
     ])
 ])
 
@@ -23,7 +24,7 @@ node ('infrastructure') {
         scos.doCheckoutStage()
 
         doStageIfDeployingToDev('Deploy to Dev') {
-            deployTo(environment: 'dev', extraArgs: "--recreate-pods --set image.tag=${env.DEV_IMAGE_TAG}", location: 'marysville')
+            deployTo(environment: 'dev', extraArgs: "--recreate-pods --set image.tag=${env.DEV_IMAGE_TAG}")
         }
 
         doStageIfMergedToMaster('Process Dev job') {
@@ -31,21 +32,21 @@ node ('infrastructure') {
         }
 
         doStageIfMergedToMaster('Deploy to Staging') {
-            deployTo(environment: 'staging', location: 'marysville')
+            deployTo(environment: 'staging')
             scos.applyAndPushGitHubTag('staging')
         }
 
         doStageIfRelease('Deploy to Production') {
-            deployTo(environment: 'prod', location: 'marysville')
+            deployTo(environment: 'prod')
             scos.applyAndPushGitHubTag('prod')
         }
     }
 }
 
-def deployTo(params = [:]) {
-    def environment = params.get('environment')
-    def location = params.get('location')
-    def extraArgs = params.get('extraArgs', '')
+def deployTo(args = [:]) {
+    def environment = args.get('environment')
+    def location = params.LOCATION
+    def extraArgs = args.get('extraArgs', '')
     if (environment == null) throw new IllegalArgumentException("environment must be specified")
     if (location == null) throw new IllegalArgumentException("location must be specified")
 
