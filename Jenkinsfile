@@ -54,7 +54,6 @@ def deployTo(args = [:]) {
         sh("""#!/bin/bash
             set -xe
 
-            helm init --client-only
             helm upgrade --install push-gateway-${location} chart/ \
                 --namespace=streaming-services \
                 --values=push-gateway-base.yaml \
